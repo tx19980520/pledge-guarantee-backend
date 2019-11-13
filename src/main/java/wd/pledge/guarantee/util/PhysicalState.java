@@ -1,4 +1,4 @@
-package wd.pledge.guarantee.entity;
+package wd.pledge.guarantee.util;
 
 public enum PhysicalState {
     STABLE, SHOCKING, MOVING, EMPTY

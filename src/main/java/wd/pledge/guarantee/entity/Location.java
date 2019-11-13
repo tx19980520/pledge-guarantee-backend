@@ -13,7 +13,7 @@ public class Location implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int locationId;
+    private Integer locationId;
 
     @Size(max = 256)
     @Column(name = "description")

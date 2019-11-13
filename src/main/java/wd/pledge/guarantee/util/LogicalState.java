@@ -1,4 +1,4 @@
-package wd.pledge.guarantee.entity;
+package wd.pledge.guarantee.util;
 
 /*
     INWAREHOUSING: 入库中

@@ -5,59 +5,73 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.Size;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "device")
 public class Device {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int deviceId;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Integer deviceId;
 
-    @Size(max = 256)
-    @Column(name = "type")
-    private String type;
+  @Size(max = 20)
+  @Column(name = "type")
+  private String type;
 
-    @Size(max = 256)
-    @Column(name = "comment")
-    private String comment;
+  @Size(max = 150)
+  @Column(name = "comment")
+  private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "pledge_id", nullable = true)
-    @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Pledge pledge;
+  @ManyToOne(fetch = FetchType.LAZY, optional = false)
+  @JoinColumn(name = "pledge_id", nullable = true)
+  @OnDelete(action = OnDeleteAction.NO_ACTION)
+  private Pledge pledge;
 
-    public Device() {}
+  @Size(max = 150)
+  @Column(name = "topic", unique = true, nullable = false)
+  private String topic;
 
-    public int getDeviceId() {
-        return deviceId;
+  public Device() {
+  }
+
+  public Integer getDeviceId() {
+    return deviceId;
+  }
+
+  public void setDeviceId(Integer deviceId) {
+    this.deviceId = deviceId;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
+  }
+
+  public String getComment() {
+    return comment;
+  }
+
+  public void setComment(String comment) {
+    this.comment = comment;
+  }
+
+  public Pledge getPledge() {
+    return pledge;
+  }
+
+  public void setPledge(Pledge pledge) {
+    this.pledge = pledge;
+  }
+
+    public String getTopic() {
+        return topic;
     }
 
-    public void setDeviceId(int deviceId) {
-        this.deviceId = deviceId;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
-
-    public Pledge getPledge() {
-        return pledge;
-    }
-
-    public void setPledge(Pledge pledge) {
-        this.pledge = pledge;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 }

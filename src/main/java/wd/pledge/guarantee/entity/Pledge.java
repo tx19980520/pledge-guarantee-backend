@@ -7,6 +7,8 @@ import javax.persistence.*;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.sql.Time;
+import wd.pledge.guarantee.util.LogicalState;
+import wd.pledge.guarantee.util.PhysicalState;
 
 @Entity
 @Table(name = "pledge")
@@ -14,7 +16,7 @@ public class Pledge implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int pledgeId;
+    private Integer pledgeId;
 
     @Size(max = 256)
     @Column(name = "name")
