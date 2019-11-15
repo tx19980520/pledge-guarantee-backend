@@ -5,12 +5,13 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import wd.pledge.guarantee.GuaranteeApplication;
 import wd.pledge.guarantee.util.PhysicalState;
 import wd.pledge.guarantee.service.RedisService;
 import org.junit.runner.RunWith;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest
+@SpringBootTest(classes = GuaranteeApplication.class)
 class RedisServiceImplTest {
 
     @Autowired
