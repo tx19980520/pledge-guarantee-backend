@@ -6,6 +6,7 @@ import com.aliyun.openservices.iot.api.message.api.MessageClient;
 import com.aliyun.openservices.iot.api.message.callback.MessageCallback;
 import com.aliyun.openservices.iot.api.message.entity.Message;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -22,6 +23,11 @@ public class GuaranteeApplication implements CommandLineRunner {
 	@Autowired
 	private AlertService alertService;
 
+	@Value("${connect.regionId}") private String regionId;
+	@Value("${connect.uid}") private String uid;
+	@Value("${connect.accessKey}") private String accessKey;
+	@Value("${connect.accessSecret}") private String accessSecret;
+	@Value("${connect.endPoint}") private String endPoint;
 
 
 	public static void main(String[] args) {
@@ -30,11 +36,6 @@ public class GuaranteeApplication implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		String regionId = "cn-shanghai";
-		String uid = "1004673557100937";
-		String accessKey = "LTAI4FqAFhAqxcKkEfsYcQdc";
-		String accessSecret = "HTWwfBGAqWPbnXcafKNdBFSorliYKx";
-		String endPoint = "https://" + uid + ".iot-as-http2." + regionId + ".aliyuncs.com";
 		// 连接配置
 		Profile profile = Profile.getAccessKeyProfile(endPoint, regionId, accessKey, accessSecret);
 		// 构造客户端
