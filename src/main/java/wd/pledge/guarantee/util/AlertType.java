@@ -3,9 +3,11 @@ package wd.pledge.guarantee.util;
 import org.springframework.lang.Nullable;
 
 public enum AlertType {
-  MOVE(0),
+  STATE(0),
 
-  SHAKE(1);
+  MOVE(1),
+
+  SHAKE(2);
 
   int type;
 

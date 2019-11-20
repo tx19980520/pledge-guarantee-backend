@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter.SseEventBuilder;
 import wd.pledge.guarantee.dto.AlertInfo;
+import wd.pledge.guarantee.dto.DeviceMessage;
 import wd.pledge.guarantee.dto.PhysicalMessage;
 import wd.pledge.guarantee.repository.DeviceRepository;
 import wd.pledge.guarantee.service.AlertService;
@@ -69,13 +70,15 @@ public class AlertServiceImpl implements AlertService {
   public void receiveHandler(MessageToken messageToken) {
     lock.lock();
     Message message = messageToken.getMessage();
-//    PhysicalMessage physicalMessage = new PhysicalMessage(new String (message.getPayload()));
-    System.out.println(message.getTopic());
-//    System.out.println(physicalMessage.getAlertType().getType());
-//    redisService.set(message.getTopic(), physicalMessage.getAlertType().getType());
-    System.out.println("after send");
-    System.out.println("I'm signalAll");
-    alertCondition.signalAll();
+    System.out.println(new String(message.getPayload()));
+    if (message.getTopic().contains("status")) {
+      DeviceMessage deviceMessage = new DeviceMessage(new String (message.getPayload()));
+      // can update device status
+    } else {
+      PhysicalMessage physicalMessage = new PhysicalMessage(new String (message.getPayload()));
+      redisService.set(message.getTopic(), physicalMessage.getAlertType().getType());
+      alertCondition.signalAll();
+    }
     lock.unlock();
   }
 }
