@@ -2,7 +2,6 @@ package wd.pledge.guarantee.service;
 
 import com.alibaba.fastjson.JSONObject;
 import wd.pledge.guarantee.entity.Pledge;
-import wd.pledge.guarantee.util.LogicalState;
 
 public interface PledgeService {
 
@@ -15,4 +14,5 @@ public interface PledgeService {
     Pledge get_one_pledge_info(Integer pledgeid);
 
     Iterable<Pledge> findAll();
+
 }
