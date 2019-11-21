@@ -48,4 +48,9 @@ public class PledgeServiceImpl implements PledgeService {
         }
         return "质押物不存在。";
     }
+
+    public void createPledge(Pledge pledge)
+    {
+        pledgeRepository.save(pledge);
+    }
 }
