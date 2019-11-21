@@ -1,5 +1,6 @@
 package wd.pledge.guarantee.controller;
 
+import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -38,11 +39,10 @@ public class PledgeController {
 
     @PostMapping(value = "/pledge/add")
     @ResponseBody
-    public String addPledge(@Valid @RequestBody Pledge pledge)
+    public String addPledge(@Valid @RequestBody JSONObject jsonObject)
             throws URISyntaxException
     {
-        pledgeService.createPledge(pledge);
-        return "质押物入库成功";
+        return pledgeService.createPledge(jsonObject);
     }
       
     @GetMapping(path="/getOne")
