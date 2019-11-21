@@ -1,5 +1,6 @@
 package wd.pledge.guarantee.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -9,6 +10,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "location")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Location implements Serializable {
 
     @Id
@@ -22,10 +24,12 @@ public class Location implements Serializable {
     @Column(name = "is_used")
     private boolean isUsed;
 
-    /*@OneToOne(fetch = FetchType.LAZY, optional = false)
+    /*
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "pledge_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
-    private Pledge pledge;*/
+    private Pledge pledge;
+    */
 
     public Location(){}
 

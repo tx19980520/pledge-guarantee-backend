@@ -12,9 +12,6 @@ import wd.pledge.guarantee.util.LogicalState;
 
 import java.util.Optional;
 
-import javax.validation.constraints.Null;
-import java.util.Optional;
-
 @Service
 public class PledgeServiceImpl implements PledgeService {
 
@@ -87,23 +84,16 @@ public class PledgeServiceImpl implements PledgeService {
   
     @Override
     public Pledge get_one_pledge_info(Integer pledgeId) {
-        Optional<Pledge> optionalPledge = pledgeRepository.findById(pledgeId);
+
+        Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
         System.out.println("SERVICE HERE GET pledgeId: " + pledgeId);
-        return optionalPledge.orElse(null);
+        return pledgeOptional.orElse(null);
     }
 
     @Override
     public Iterable<Pledge> findAll() {
-        /*
-        Pledge pledge = pledgeRepository.findByName("test1");
-        if (pledge == null) {
-            System.out.println("NULL ");
-        }
-        else {
-            System.out.println("HAVE");
-        }
-        */
         System.out.println("SERVICE GET ALL ALL ALL ");
         return pledgeRepository.findAll();
     }
+
 }
