@@ -10,4 +10,8 @@ public interface PledgeService {
     public String setExWarehoused(Integer pledgeId);
 
     public void createPledge(Pledge pledge);
+  
+    Pledge get_one_pledge_info(Integer pledgeid);
+
+    Iterable<Pledge> findAll();
 }

@@ -44,4 +44,21 @@ public class PledgeController {
         pledgeService.createPledge(pledge);
         return "质押物入库成功";
     }
+      
+    @GetMapping(path="/getOne")
+    @ResponseBody
+    public Pledge getOnePledge(@RequestParam("pledgeID") Integer pledgeId) {
+        System.out.println("Controller HERE GET pledgeId: " + pledgeId);
+        return pledgeService.get_one_pledge_info(pledgeId);
+    }
+
+    @GetMapping(path="/getAll")
+    public @ResponseBody Iterable<Pledge> getAllPledge() {
+        return pledgeService.findAll();
+    }
+
+    @GetMapping(path="/test")
+    public @ResponseBody String test() {
+        return "test";
+    }
 }
