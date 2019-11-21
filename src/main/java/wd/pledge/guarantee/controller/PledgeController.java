@@ -24,4 +24,12 @@ public class PledgeController {
     {
         return pledgeService.setExWarehousing(id);
     }
+
+    @RequestMapping(value = "/pledge/exwarehoused")
+    @ResponseBody
+    public String setExWarehoused(@RequestParam("id") Integer id)
+            throws IOException, ClassNotFoundException, SQLException
+    {
+        return pledgeService.setExWarehoused(id);
+    }
 }

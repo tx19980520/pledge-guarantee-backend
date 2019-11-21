@@ -31,4 +31,21 @@ public class PledgeServiceImpl implements PledgeService {
         }
         return "质押物不存在。";
     }
+
+    public String setExWarehoused(Integer pledgeId)
+    {
+        Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
+        if (pledgeOptional.isPresent()) {
+            Pledge pledge = pledgeOptional.get();
+            if (pledge.getLogicalState() == LogicalState.EXWAREHOUSING) {
+                // 前置条件：质押物状态为“可出库”
+                pledgeRepository.updatePledgeLogicalState(pledgeId, LogicalState.EXWAREHOUSED);
+                return "质押物标记成功。";
+            }
+            else {
+                return "质押物逻辑状态错误。";
+            }
+        }
+        return "质押物不存在。";
+    }
 }
