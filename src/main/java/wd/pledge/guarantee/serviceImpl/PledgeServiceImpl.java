@@ -51,21 +51,7 @@ public class PledgeServiceImpl implements PledgeService {
         return "质押物不存在。";
     }
 
-    public String createPledge(JSONObject jsonObject) {
-        Integer locationId = jsonObject.getInteger("locationId");
-        Optional<Location> locationOptional = locationRepository.findById(locationId);
-        Location location = locationOptional.get();
-        Pledge pledge = new Pledge();
-        pledge.setPledgeId(jsonObject.getInteger("pledgeId"));
-        pledge.setName(jsonObject.getString("name"));
-        pledge.setValue(jsonObject.getFloatValue("value"));
-        pledge.setLocation(location);
-        pledge.setLogicalState(LogicalState.INWAREHOUSING);
-        pledgeRepository.save(pledge);
-        locationRepository.setLocationUsed(location.getLocationId(), true);
-        return "质押物入库成功。";
 
-    }
 
     @Override
     public Pledge get_one_pledge_info(Integer pledgeId) {
