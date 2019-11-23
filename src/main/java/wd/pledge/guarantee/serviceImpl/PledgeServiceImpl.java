@@ -21,8 +21,7 @@ public class PledgeServiceImpl implements PledgeService {
     @Autowired
     LocationRepository locationRepository;
 
-    public String setExWarehousing(Integer pledgeId)
-    {
+    public String setExWarehousing(Integer pledgeId) {
         Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
         if (pledgeOptional.isPresent()) {
             Pledge pledge = pledgeOptional.get();
@@ -30,16 +29,14 @@ public class PledgeServiceImpl implements PledgeService {
                 // 前置条件：质押物状态为“已入库”
                 pledgeRepository.updatePledgeLogicalState(pledgeId, LogicalState.EXWAREHOUSING);
                 return "质押物标记成功。";
-            }
-            else {
+            } else {
                 return "质押物逻辑状态错误。";
             }
         }
         return "质押物不存在。";
     }
 
-    public String setExWarehoused(Integer pledgeId)
-    {
+    public String setExWarehoused(Integer pledgeId) {
         Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
         if (pledgeOptional.isPresent()) {
             Pledge pledge = pledgeOptional.get();
@@ -47,41 +44,29 @@ public class PledgeServiceImpl implements PledgeService {
                 // 前置条件：质押物状态为“可出库”
                 pledgeRepository.updatePledgeLogicalState(pledgeId, LogicalState.EXWAREHOUSED);
                 return "质押物标记成功。";
-            }
-            else {
+            } else {
                 return "质押物逻辑状态错误。";
             }
         }
         return "质押物不存在。";
     }
 
-    public String createPledge(JSONObject jsonObject)
-    {
+    public String createPledge(JSONObject jsonObject) {
         Integer locationId = jsonObject.getInteger("locationId");
-        if (locationId == null)
-            return "没有提供locationId参数。";
         Optional<Location> locationOptional = locationRepository.findById(locationId);
-        if (locationOptional.isPresent()) {
-            Location location = locationOptional.get();
-            if (location.isUsed()) {
-                return "位置已被占用。";
-            }
-            Pledge pledge = new Pledge();
-            pledge.setPledgeId(jsonObject.getInteger("pledgeId"));
-            pledge.setName(jsonObject.getString("name"));
-            pledge.setValue(jsonObject.getFloatValue("value"));
-            pledge.setLocation(location);
-            pledge.setLogicalState(LogicalState.INWAREHOUSING);
-            pledgeRepository.save(pledge);
-            locationRepository.setLocationUsed(location.getLocationId(), true);
-            return "质押物入库成功。";
-        }
-        else {
-            return "位置ID不存在";
-        }
-        //pledgeRepository.save(pledge);
+        Location location = locationOptional.get();
+        Pledge pledge = new Pledge();
+        pledge.setPledgeId(jsonObject.getInteger("pledgeId"));
+        pledge.setName(jsonObject.getString("name"));
+        pledge.setValue(jsonObject.getFloatValue("value"));
+        pledge.setLocation(location);
+        pledge.setLogicalState(LogicalState.INWAREHOUSING);
+        pledgeRepository.save(pledge);
+        locationRepository.setLocationUsed(location.getLocationId(), true);
+        return "质押物入库成功。";
+
     }
-  
+
     @Override
     public Pledge get_one_pledge_info(Integer pledgeId) {
 
@@ -92,8 +77,27 @@ public class PledgeServiceImpl implements PledgeService {
 
     @Override
     public Iterable<Pledge> findAll() {
-        System.out.println("SERVICE GET ALL ALL ALL ");
+        System.out.println("SERVICE GET ALL  ");
         return pledgeRepository.findAll();
+    }
+
+    @Override
+    public String confirmLocation(JSONObject jsonObject) {
+        Integer locationId = jsonObject.getInteger("locationId");
+        if (locationId == null)
+            return "没有提供locationId参数。";
+        Optional<Location> locationOptional = locationRepository.findById(locationId);
+        if (locationOptional.isPresent()) {
+            Location location = locationOptional.get();
+            if (location.isUsed()) {
+                return "位置已被占用。";
+            }
+        }
+        else {
+            return "位置ID不存在";
+        }
+        return "Location right.";
+
     }
 
 }

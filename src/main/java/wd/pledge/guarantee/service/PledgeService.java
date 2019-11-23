@@ -15,4 +15,6 @@ public interface PledgeService {
 
     Iterable<Pledge> findAll();
 
+    String confirmLocation(JSONObject jsonObject);
+
 }
