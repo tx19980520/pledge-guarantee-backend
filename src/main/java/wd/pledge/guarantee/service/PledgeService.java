@@ -9,7 +9,8 @@ public interface PledgeService {
 
     public String setExWarehoused(Integer pledgeId);
 
-  
+    public String createPledge(JSONObject jsonObject);
+
     Pledge get_one_pledge_info(Integer pledgeid);
 
     Iterable<Pledge> findAll();

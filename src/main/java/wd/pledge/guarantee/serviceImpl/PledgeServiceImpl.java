@@ -51,6 +51,32 @@ public class PledgeServiceImpl implements PledgeService {
         return "质押物不存在。";
     }
 
+    public String createPledge(JSONObject jsonObject)
+    {
+        Integer locationId = jsonObject.getInteger("locationId");
+        if (locationId == null)
+            return "没有提供locationId参数。";
+        Optional<Location> locationOptional = locationRepository.findById(locationId);
+        if (locationOptional.isPresent()) {
+            Location location = locationOptional.get();
+            if (location.isUsed()) {
+                return "位置已被占用。";
+            }
+            Pledge pledge = new Pledge();
+            pledge.setPledgeId(jsonObject.getInteger("pledgeId"));
+            pledge.setName(jsonObject.getString("name"));
+            pledge.setValue(jsonObject.getFloatValue("value"));
+            pledge.setLocation(location);
+            pledge.setLogicalState(LogicalState.INWAREHOUSING);
+            pledgeRepository.save(pledge);
+            locationRepository.setLocationUsed(location.getLocationId(), true);
+            return "质押物入库成功。";
+        }
+        else {
+            return "位置ID不存在";
+        }
+        //pledgeRepository.save(pledge);
+    }
 
 
     @Override
@@ -82,7 +108,7 @@ public class PledgeServiceImpl implements PledgeService {
         else {
             return "位置ID不存在";
         }
-        return "Location right.";
+        return "位置确认";
 
     }
 
