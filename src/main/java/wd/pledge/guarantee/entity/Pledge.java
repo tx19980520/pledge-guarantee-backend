@@ -42,6 +42,11 @@ public class Pledge implements Serializable {
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Location location;
 
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "record_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Record record;
+
     public Pledge(){}
 
     public int getPledgeId() {
@@ -98,5 +103,13 @@ public class Pledge implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Record getRecord() {
+        return record;
+    }
+
+    public void setRecord(Record record) {
+        this.record = record;
     }
 }
