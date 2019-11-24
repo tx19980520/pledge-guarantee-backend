@@ -1,17 +1,21 @@
 package wd.pledge.guarantee.controller;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import wd.pledge.guarantee.entity.Pledge;
+import wd.pledge.guarantee.service.AlertService;
 import wd.pledge.guarantee.service.PledgeService;
+import wd.pledge.guarantee.serviceImpl.AlertServiceImpl;
 
 import javax.validation.Valid;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
+import java.util.List;
 
 @Controller
 @RequestMapping("/")
@@ -19,6 +23,9 @@ public class PledgeController {
 
     @Autowired
     private PledgeService pledgeService;
+
+    @Autowired
+    private AlertServiceImpl alertServiceImpl;
 
     @RequestMapping(value = "/pledge/exwarehousing")
     @ResponseBody
@@ -32,6 +39,12 @@ public class PledgeController {
     public String setExWarehoused(@RequestParam("id") Integer id)
             throws IOException, ClassNotFoundException, SQLException {
         return pledgeService.setExWarehoused(id);
+    }
+
+    @GetMapping(value = "/pledge/addConfirm")
+    @ResponseBody
+    public String addPledgeTest(@Valid @RequestBody JSONObject jsonObject) {
+        return pledgeService.confirmLocation(jsonObject);
     }
 
     @PostMapping(value = "/pledge/add")
@@ -60,5 +73,12 @@ public class PledgeController {
     public @ResponseBody
     Iterable<Pledge> getAllPledge() {
         return pledgeService.findAll();
+    }
+
+    @GetMapping(value = "/pledge/image")
+    @ResponseBody
+    public JSONArray getImages() {
+        JSONArray array= JSONArray.parseArray(JSON.toJSONString(alertServiceImpl.getImageList()));
+        return array;
     }
 }
