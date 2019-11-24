@@ -1,8 +1,12 @@
 package wd.pledge.guarantee.serviceImpl;
 
+import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.iot.api.message.entity.Message;
 import com.aliyun.openservices.iot.api.message.entity.MessageToken;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.Condition;
@@ -20,6 +24,8 @@ import wd.pledge.guarantee.service.AlertService;
 import wd.pledge.guarantee.service.RedisService;
 import wd.pledge.guarantee.util.AlertType;
 
+import javax.validation.constraints.Null;
+
 @Service
 public class AlertServiceImpl implements AlertService {
 
@@ -30,12 +36,23 @@ public class AlertServiceImpl implements AlertService {
   private Lock lock;
   private Condition alertCondition;
 
+  private List<JSONObject> imageList;
+
   @Autowired
   public void lock() {
     this.lock = new ReentrantLock();
     this.alertCondition = lock.newCondition();
   }
 
+
+  @Autowired
+  public void imageList() {
+    this.imageList = new ArrayList<>();
+  }
+
+  public List<JSONObject> getImageList() {
+    return imageList;
+  }
 
   @Override
   public SseEmitter send(String name) throws IOException {
@@ -69,16 +86,43 @@ public class AlertServiceImpl implements AlertService {
   @Override
   public void receiveHandler(MessageToken messageToken) {
     lock.lock();
+
     Message message = messageToken.getMessage();
+
+    System.out.println("Find where is the pic1: Just get message");
     System.out.println(new String(message.getPayload()));
+    String topic = message.getTopic();
+    // picture into list<js>
+    if (topic.contains("picture")) {
+      System.out.println("get picture");
+      String imgInfo = new String(message.getPayload());
+      System.out.println("ImageInfo:" + imgInfo);
+      JSONObject jsonObject = JSONObject.parseObject(imgInfo);
+      System.out.println("JSONOBJECT:" + jsonObject.toJSONString());
+      if (imageList.size() == 6) {
+        imageList.remove(0);
+        imageList.add(jsonObject);
+      }
+      else {
+        imageList.add(jsonObject);
+      }
+    }
+
+    /*
     if (message.getTopic().contains("status")) {
+      System.out.println("Find where is the pic2: have status");
       DeviceMessage deviceMessage = new DeviceMessage(new String (message.getPayload()));
       // can update device status
     } else {
+      System.out.println("Find where is the pic3: Don't have status");
       PhysicalMessage physicalMessage = new PhysicalMessage(new String (message.getPayload()));
+      System.out.println("Don't have status");
+      System.out.println("getAlertType" + physicalMessage.getAlertType());
+
       redisService.set(message.getTopic(), physicalMessage.getAlertType().getType());
       alertCondition.signalAll();
     }
+     */
     lock.unlock();
   }
 }
