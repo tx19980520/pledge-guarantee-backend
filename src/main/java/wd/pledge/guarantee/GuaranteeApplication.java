@@ -43,6 +43,8 @@ public class GuaranteeApplication implements CommandLineRunner {
 		// 数据接收
 		client.connect(messageToken -> {
 			alertService.receiveHandler(messageToken);
+			client.ack(messageToken);
+			System.out.println("Client ack!");
 			return MessageCallback.Action.CommitSuccess;
 		});
 	}
