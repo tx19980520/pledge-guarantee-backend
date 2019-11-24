@@ -26,8 +26,8 @@ public class Pledge implements Serializable {
     @Column(name = "value")
     private Float value;
 
-    @Column(name = "warehouse_in_time")
-    private Time warehouseInTime;
+//    @Column(name = "warehouse_in_time")
+//    private Time warehouseInTime;
 
     @Column(name = "logical_state")
     @Enumerated(EnumType.STRING)
@@ -41,6 +41,11 @@ public class Pledge implements Serializable {
     @JoinColumn(name = "location_id", nullable = true)
     @OnDelete(action = OnDeleteAction.NO_ACTION)
     private Location location;
+
+    @OneToOne(fetch = FetchType.EAGER, optional = false)
+    @JoinColumn(name = "record_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    private Record record;
 
     public Pledge(){}
 
@@ -68,13 +73,13 @@ public class Pledge implements Serializable {
         this.value = value;
     }
 
-    public Time getWarehouseInTime() {
-        return warehouseInTime;
-    }
-
-    public void setWarehouseInTime(Time warehouseInTime) {
-        this.warehouseInTime = warehouseInTime;
-    }
+//    public Time getWarehouseInTime() {
+//        return warehouseInTime;
+//    }
+//
+//    public void setWarehouseInTime(Time warehouseInTime) {
+//        this.warehouseInTime = warehouseInTime;
+//    }
 
     public LogicalState getLogicalState() {
         return logicalState;
@@ -98,5 +103,13 @@ public class Pledge implements Serializable {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public Record getRecord() {
+        return record;
+    }
+
+    public void setRecord(Record record) {
+        this.record = record;
     }
 }
