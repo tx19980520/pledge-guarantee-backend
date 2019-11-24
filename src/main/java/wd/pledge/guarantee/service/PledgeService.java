@@ -5,6 +5,8 @@ import wd.pledge.guarantee.entity.Pledge;
 
 public interface PledgeService {
 
+    public String setInWarehousing(Integer pledgeId);
+
     public String setExWarehousing(Integer pledgeId);
 
     public String setExWarehoused(Integer pledgeId);
