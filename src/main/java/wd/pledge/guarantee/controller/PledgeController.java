@@ -6,7 +6,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import wd.pledge.guarantee.entity.Pledge;
+import wd.pledge.guarantee.entity.Record;
 import wd.pledge.guarantee.service.PledgeService;
+import wd.pledge.guarantee.service.RecordService;
 
 import javax.validation.Valid;
 import java.io.IOException;
@@ -19,6 +21,9 @@ public class PledgeController {
 
     @Autowired
     private PledgeService pledgeService;
+
+    @Autowired
+    private RecordService recordService;
 
     @RequestMapping(value = "/pledge/exwarehousing")
     @ResponseBody
@@ -45,6 +50,13 @@ public class PledgeController {
     public String addPledge(@Valid @RequestBody JSONObject jsonObject)
             throws URISyntaxException {
         return pledgeService.createPledge(jsonObject);
+    }
+
+    @GetMapping(value = "/pledge/record")
+    @ResponseBody
+    public Record getOnePledgeRecordJson(@RequestParam("id") Integer pledgeId) {
+        Record record = recordService.getRecord(pledgeId);
+        return record;
     }
 
     @GetMapping(value = "/pledge/getOneJson")
