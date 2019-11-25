@@ -46,7 +46,7 @@ public class PledgeController {
         return pledgeService.setExWarehoused(id);
     }
 
-    @GetMapping(value = "/addConfirm")
+    @PostMapping(value = "/addConfirm")
     @ResponseBody
     public String addPledgeTest(@Valid @RequestBody JSONObject jsonObject) {
         return pledgeService.confirmLocation(jsonObject);
