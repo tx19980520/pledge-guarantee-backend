@@ -13,6 +13,7 @@ import wd.pledge.guarantee.repository.PledgeRepository;
 import wd.pledge.guarantee.repository.RecordRepository;
 import wd.pledge.guarantee.service.PledgeService;
 import wd.pledge.guarantee.util.LogicalState;
+import wd.pledge.guarantee.util.PhysicalState;
 
 import java.sql.Time;
 import java.util.Date;
@@ -97,6 +98,11 @@ public class PledgeServiceImpl implements PledgeService {
             }
         }
         return "质押物不存在。";
+    }
+
+    public void setPhysicalState(Integer id, PhysicalState physicalState)
+    {
+        pledgeRepository.updatePledgePhysicalState(id, physicalState);
     }
 
     public String createPledge(JSONObject jsonObject)

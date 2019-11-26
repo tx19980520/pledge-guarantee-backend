@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Device {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer deviceId;
+  @Size(max = 20)
+  private String deviceId;
 
   @Size(max = 20)
   @Column(name = "type")
@@ -35,11 +35,11 @@ public class Device {
   public Device() {
   }
 
-  public Integer getDeviceId() {
+  public String getDeviceId() {
     return deviceId;
   }
 
-  public void setDeviceId(Integer deviceId) {
+  public void setDeviceId(String deviceId) {
     this.deviceId = deviceId;
   }
 
