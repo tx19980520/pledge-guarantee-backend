@@ -132,8 +132,14 @@ public class AlertServiceImpl implements AlertService {
       System.out.println("get Property" + jsonObject.toJSONString());
       JSONObject ts = jsonObject.getJSONObject("items");
       System.out.println("get JsonTS" + ts.toJSONString());
-      if (ts.containsKey("Temperature")) temp = ts.getFloatValue("Temperature");
-      if (ts.containsKey("Humidity")) humidity = ts.getFloatValue("Humidity");
+      if (ts.containsKey("Temperature")) {
+        JSONObject t = ts.getJSONObject("Temperature");
+        temp = t.getFloat("value");
+      }
+      if (ts.containsKey("Humidity")) {
+        JSONObject h = ts.getJSONObject("Humidity");
+        humidity = h.getFloat("value");
+      }
     }
 
     if (message.getTopic().contains("status")) {
