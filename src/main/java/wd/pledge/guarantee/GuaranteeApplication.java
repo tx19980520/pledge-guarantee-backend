@@ -42,6 +42,7 @@ public class GuaranteeApplication implements CommandLineRunner {
 		MessageClient client = MessageClientFactory.messageClient(profile);
 		// 数据接收
 		client.connect(messageToken -> {
+			System.out.println("Get AliYun Data");
 			alertService.receiveHandler(messageToken);
 			client.ack(messageToken);
 			System.out.println("Client ack!");

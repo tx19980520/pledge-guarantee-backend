@@ -81,6 +81,15 @@ public class PledgeController {
         return pledgeService.get_one_pledge_info(pledgeId);
     }
 
+    @GetMapping(value = "/getTS")
+    @ResponseBody
+    public JSONObject getTS() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("t", alertServiceImpl.getTemp());
+        jsonObject.put("s",alertServiceImpl.getHumidity());
+        return jsonObject;
+    }
+
     @RequestMapping(value = "/getAll")
     public @ResponseBody
     Iterable<Pledge> getAllPledge() {

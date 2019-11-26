@@ -1,5 +1,6 @@
 package wd.pledge.guarantee.serviceImpl;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.aliyun.openservices.iot.api.message.entity.Message;
 import com.aliyun.openservices.iot.api.message.entity.MessageToken;
@@ -40,7 +41,8 @@ public class AlertServiceImpl implements AlertService {
   private DeviceRepository deviceRepository;
   private Lock lock;
   private Condition alertCondition;
-
+  private float temp;
+  private float humidity;
   private List<JSONObject> imageList;
 
   @Autowired
@@ -60,6 +62,14 @@ public class AlertServiceImpl implements AlertService {
 
   public List<JSONObject> getImageList() {
     return imageList;
+  }
+
+  public float getTemp() {
+    return temp;
+  }
+
+  public float getHumidity() {
+    return humidity;
   }
 
   @Override
@@ -100,6 +110,8 @@ public class AlertServiceImpl implements AlertService {
     System.out.println("Find where is the pic1: Just get message");
     System.out.println(new String(message.getPayload()));
     String topic = message.getTopic();
+
+
     // picture into list<js>
     if (topic.contains("picture")) {
       System.out.println("get picture");
@@ -116,6 +128,21 @@ public class AlertServiceImpl implements AlertService {
       }
     }
 
+    if (topic.contains("property")) {
+      String info = new String(message.getPayload());
+      JSONObject jsonObject = JSONObject.parseObject(info);
+      System.out.println("get Property" + jsonObject.toJSONString());
+      JSONObject ts = jsonObject.getJSONObject("items");
+      System.out.println("get JsonTS" + ts.toJSONString());
+      if (ts.containsKey("Temperature")) {
+        JSONObject t = ts.getJSONObject("Temperature");
+        temp = t.getFloat("value");
+      }
+      if (ts.containsKey("Humidity")) {
+        JSONObject h = ts.getJSONObject("Humidity");
+        humidity = h.getFloat("value");
+      }
+    }
 
     if (message.getTopic().contains("status")) {
       System.out.println("Find where is the pic2: have status");
