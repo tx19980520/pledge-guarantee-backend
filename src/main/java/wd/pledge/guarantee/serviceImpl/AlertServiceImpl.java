@@ -108,7 +108,7 @@ public class AlertServiceImpl implements AlertService {
       }
     }
 
-    /*
+
     if (message.getTopic().contains("status")) {
       System.out.println("Find where is the pic2: have status");
       DeviceMessage deviceMessage = new DeviceMessage(new String (message.getPayload()));
@@ -122,7 +122,7 @@ public class AlertServiceImpl implements AlertService {
       redisService.set(message.getTopic(), physicalMessage.getAlertType().getType());
       alertCondition.signalAll();
     }
-     */
+
     lock.unlock();
   }
 }
