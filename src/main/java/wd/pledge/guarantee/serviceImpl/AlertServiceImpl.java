@@ -21,6 +21,7 @@ import wd.pledge.guarantee.dto.AlertInfo;
 import wd.pledge.guarantee.dto.DeviceMessage;
 import wd.pledge.guarantee.dto.PhysicalMessage;
 import wd.pledge.guarantee.entity.Device;
+import wd.pledge.guarantee.entity.Pledge;
 import wd.pledge.guarantee.repository.DeviceRepository;
 import wd.pledge.guarantee.service.AlertService;
 import wd.pledge.guarantee.service.PledgeService;
@@ -129,19 +130,27 @@ public class AlertServiceImpl implements AlertService {
       if (deviceOptional.isPresent()) {
         JSONObject jsonObject = JSONObject.parseObject(new String(message.getPayload()));
         String warning = physicalMessage.getItems().getJSONObject("Warning").getString("value");
-        Integer id = deviceOptional.get().getPledge().getPledgeId();
-        switch (warning) {
-          case "000":
-            pledgeService.setPhysicalState(id, PhysicalState.STABLE);
-            pledgeService.setInWarehoused(id);
-            break;
-          case "100":
-            pledgeService.setPhysicalState(id, PhysicalState.SHOCKING);
-            break;
-          case "110":
-          case "111":
-            pledgeService.setPhysicalState(id, PhysicalState.MOVING);
-            break;
+        Integer id = 0;
+        Iterable<Pledge> pledges = pledgeService.findAll();
+        for (Pledge pledge: pledges) {
+          if (pledge.getDevice().getDeviceId().equals(physicalMessage.getDeviceName())) {
+            id = pledge.getPledgeId();
+          }
+        }
+        if (id != 0) {
+          switch (warning) {
+            case "000":
+              pledgeService.setPhysicalState(id, PhysicalState.STABLE);
+              pledgeService.setInWarehoused(id);
+              break;
+            case "100":
+              pledgeService.setPhysicalState(id, PhysicalState.SHOCKING);
+              break;
+            case "110":
+            case "111":
+              pledgeService.setPhysicalState(id, PhysicalState.MOVING);
+              break;
+          }
         }
       }
 

@@ -23,11 +23,6 @@ public class Device {
   @Column(name = "comment")
   private String comment;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "pledge_id", nullable = true)
-  @OnDelete(action = OnDeleteAction.NO_ACTION)
-  private Pledge pledge;
-
   @Size(max = 150)
   @Column(name = "topic", unique = true, nullable = false)
   private String topic;
@@ -57,14 +52,6 @@ public class Device {
 
   public void setComment(String comment) {
     this.comment = comment;
-  }
-
-  public Pledge getPledge() {
-    return pledge;
-  }
-
-  public void setPledge(Pledge pledge) {
-    this.pledge = pledge;
   }
 
     public String getTopic() {

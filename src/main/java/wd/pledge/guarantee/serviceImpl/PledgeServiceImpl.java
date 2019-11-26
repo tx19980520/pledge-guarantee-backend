@@ -68,19 +68,19 @@ public class PledgeServiceImpl implements PledgeService {
         return "质押物不存在。";
     }
 
-    private void freeDevice(Integer pledgeId) {
-        Iterable<Device> devices = deviceRepository.findAll();
-        Device aimDevice = null;
-        for (Device device : devices) {
-            if (device.getPledge().getPledgeId() == pledgeId) {
-                aimDevice = device;
-            }
-        }
-        if (aimDevice != null) {
-            aimDevice.setPledge(null);
-            deviceRepository.save(aimDevice);
-        }
-    }
+//    private void freeDevice(Integer pledgeId) {
+//        Iterable<Device> devices = deviceRepository.findAll();
+//        Device aimDevice = null;
+//        for (Device device : devices) {
+//            if (device.getPledge().getPledgeId() == pledgeId) {
+//                aimDevice = device;
+//            }
+//        }
+//        if (aimDevice != null) {
+//            aimDevice.setPledge(null);
+//            deviceRepository.save(aimDevice);
+//        }
+//    }
 
     public String setExWarehoused(Integer pledgeId) {
         Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
@@ -91,7 +91,7 @@ public class PledgeServiceImpl implements PledgeService {
                 pledgeRepository.updatePledgeLogicalState(pledgeId, LogicalState.EXWAREHOUSED);
                 Date date = new Date();
                 recordRepository.updateExwarehousedTime(pledge.getRecord().getRecordId(), date.toString());
-                freeDevice(pledgeId);
+                // freeDevice(pledgeId);
                 return "质押物标记成功。";
             } else {
                 return "质押物逻辑状态错误。";
@@ -125,17 +125,22 @@ public class PledgeServiceImpl implements PledgeService {
             pledge.setLogicalState(LogicalState.INWAREHOUSING);
 
             // 系统寻找空的device
-            Iterable<Device> devices = deviceRepository.findAll();
-            boolean hasFreeDevice = false;
-            for (Device device : devices) {
-                if (device.getPledge() == null) {
-                    hasFreeDevice = true;
-                    device.setPledge(pledge);
-                    deviceRepository.save(device);
-                }
-            }
-            if (!hasFreeDevice) {
-                return "没有空余的仓位。";
+//            Iterable<Device> devices = deviceRepository.findAll();
+//            Iterable<Pledge> pledges = pledgeRepository.findAll();
+//            boolean hasFreeDevice = false;
+//            for (Pledge pledge1 : pledges) {
+//                if (device.getPledge() == null) {
+//                    hasFreeDevice = true;
+//                    device.setPledge(pledge);
+//                    deviceRepository.save(device);
+//                }
+//            }
+//            if (!hasFreeDevice) {
+//                return "没有空余的仓位。";
+//            }
+            Optional<Device> device = deviceRepository.findById("test_device_1");
+            if (!device.isPresent()) {
+                return "不存在空的仓位";
             }
 
             Record record = new Record();
@@ -144,6 +149,7 @@ public class PledgeServiceImpl implements PledgeService {
             recordRepository.save(record);
 
             pledge.setRecord(record);
+            pledge.setDevice(device.get());
             pledgeRepository.save(pledge);
             locationRepository.setLocationUsed(location.getLocationId(), true);
             return "质押物入库成功。";
