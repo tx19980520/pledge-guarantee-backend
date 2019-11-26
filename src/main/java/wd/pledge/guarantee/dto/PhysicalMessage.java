@@ -11,6 +11,18 @@ public class PhysicalMessage implements Serializable {
   private String productKey;
   private String deviceName;
   private JSONObject items;
+
+  /*
+  * {
+  * "deviceType":"CustomCategory",
+  * "iotId":"AJcrhU0BZgv4volyOeH4000100",
+  * "requestId":"21",
+  * "productKey":"a1hGIDupeHM",
+  * "gmtCreate":1574776726151,
+  * "deviceName":"test_device_1",
+  * "items":{"Temperature":{"value":2,"time":1574776726155},
+  * "Humidity":{"value":3,"time":1574776726155}}}
+  */
   public PhysicalMessage(String payload) {
     JSONObject j = (JSONObject) JSONObject.parse(payload);
     deviceType = j.getString("deviceType");
@@ -69,6 +81,7 @@ public class PhysicalMessage implements Serializable {
     this.items = items;
   }
   public AlertType getAlertType() {
-    return AlertType.resolve(this.items.getJSONObject("shake").getInteger("value"));
+    //return AlertType.resolve(this.items.getJSONObject("shake").getInteger("value"));
+    return null;
   }
 }

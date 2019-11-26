@@ -12,8 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class Device {
 
   @Id
-  @GeneratedValue(strategy = GenerationType.IDENTITY)
-  private Integer deviceId;
+  @Size(max = 20)
+  private String deviceId;
 
   @Size(max = 20)
   @Column(name = "type")
@@ -23,11 +23,6 @@ public class Device {
   @Column(name = "comment")
   private String comment;
 
-  @ManyToOne(fetch = FetchType.LAZY, optional = false)
-  @JoinColumn(name = "pledge_id", nullable = true)
-  @OnDelete(action = OnDeleteAction.NO_ACTION)
-  private Pledge pledge;
-
   @Size(max = 150)
   @Column(name = "topic", unique = true, nullable = false)
   private String topic;
@@ -35,11 +30,11 @@ public class Device {
   public Device() {
   }
 
-  public Integer getDeviceId() {
+  public String getDeviceId() {
     return deviceId;
   }
 
-  public void setDeviceId(Integer deviceId) {
+  public void setDeviceId(String deviceId) {
     this.deviceId = deviceId;
   }
 
@@ -57,14 +52,6 @@ public class Device {
 
   public void setComment(String comment) {
     this.comment = comment;
-  }
-
-  public Pledge getPledge() {
-    return pledge;
-  }
-
-  public void setPledge(Pledge pledge) {
-    this.pledge = pledge;
   }
 
     public String getTopic() {

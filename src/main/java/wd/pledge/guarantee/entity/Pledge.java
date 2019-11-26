@@ -47,6 +47,11 @@ public class Pledge implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     private Record record;
 
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "device_id", nullable = true)
+    @OnDelete(action = OnDeleteAction.NO_ACTION)
+    private Device device;
+
     public Pledge(){}
 
     public int getPledgeId() {
@@ -111,5 +116,13 @@ public class Pledge implements Serializable {
 
     public void setRecord(Record record) {
         this.record = record;
+    }
+
+    public Device getDevice() {
+        return device;
+    }
+
+    public void setDevice(Device device) {
+        this.device = device;
     }
 }
