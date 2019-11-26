@@ -3,9 +3,11 @@ package wd.pledge.guarantee.serviceImpl;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import wd.pledge.guarantee.entity.Device;
 import wd.pledge.guarantee.entity.Location;
 import wd.pledge.guarantee.entity.Pledge;
 import wd.pledge.guarantee.entity.Record;
+import wd.pledge.guarantee.repository.DeviceRepository;
 import wd.pledge.guarantee.repository.LocationRepository;
 import wd.pledge.guarantee.repository.PledgeRepository;
 import wd.pledge.guarantee.repository.RecordRepository;
@@ -20,6 +22,9 @@ import java.util.Optional;
 public class PledgeServiceImpl implements PledgeService {
 
     @Autowired
+    DeviceRepository deviceRepository;
+
+    @Autowired
     PledgeRepository pledgeRepository;
 
     @Autowired
@@ -28,7 +33,7 @@ public class PledgeServiceImpl implements PledgeService {
     @Autowired
     RecordRepository recordRepository;
 
-    public String setInWarehousing(Integer pledgeId) {
+    public String setInWarehoused(Integer pledgeId) {
         Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
         if (pledgeOptional.isPresent()) {
             Pledge pledge = pledgeOptional.get();
@@ -62,6 +67,20 @@ public class PledgeServiceImpl implements PledgeService {
         return "质押物不存在。";
     }
 
+    private void freeDevice(Integer pledgeId) {
+        Iterable<Device> devices = deviceRepository.findAll();
+        Device aimDevice = null;
+        for (Device device : devices) {
+            if (device.getPledge().getPledgeId() == pledgeId) {
+                aimDevice = device;
+            }
+        }
+        if (aimDevice != null) {
+            aimDevice.setPledge(null);
+            deviceRepository.save(aimDevice);
+        }
+    }
+
     public String setExWarehoused(Integer pledgeId) {
         Optional<Pledge> pledgeOptional = pledgeRepository.findById(pledgeId);
         if (pledgeOptional.isPresent()) {
@@ -71,6 +90,7 @@ public class PledgeServiceImpl implements PledgeService {
                 pledgeRepository.updatePledgeLogicalState(pledgeId, LogicalState.EXWAREHOUSED);
                 Date date = new Date();
                 recordRepository.updateExwarehousedTime(pledge.getRecord().getRecordId(), date.toString());
+                freeDevice(pledgeId);
                 return "质押物标记成功。";
             } else {
                 return "质押物逻辑状态错误。";
@@ -90,12 +110,27 @@ public class PledgeServiceImpl implements PledgeService {
             if (location.isUsed()) {
                 return "位置已被占用。";
             }
+
             Pledge pledge = new Pledge();
             pledge.setPledgeId(jsonObject.getInteger("pledgeId"));
             pledge.setName(jsonObject.getString("name"));
             pledge.setValue(jsonObject.getFloatValue("value"));
             pledge.setLocation(location);
             pledge.setLogicalState(LogicalState.INWAREHOUSING);
+
+            // 系统寻找空的device
+            Iterable<Device> devices = deviceRepository.findAll();
+            boolean hasFreeDevice = false;
+            for (Device device : devices) {
+                if (device.getPledge() == null) {
+                    hasFreeDevice = true;
+                    device.setPledge(pledge);
+                    deviceRepository.save(device);
+                }
+            }
+            if (!hasFreeDevice) {
+                return "没有空余的仓位。";
+            }
 
             Record record = new Record();
             Date date = new Date();
