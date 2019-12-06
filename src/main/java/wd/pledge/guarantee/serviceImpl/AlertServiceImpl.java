@@ -93,8 +93,8 @@ public class AlertServiceImpl implements AlertService {
           alertCondition.await();
         } while (true);
       } catch (Exception ex) {
-        System.out.println(ex.toString());
-        System.out.println(ex.getMessage());
+        //System.out.println(ex.toString());
+        //System.out.println(ex.getMessage());
         emitter.completeWithError(ex);
       }
     });
@@ -108,7 +108,7 @@ public class AlertServiceImpl implements AlertService {
     Message message = messageToken.getMessage();
 
     System.out.println("Find where is the pic1: Just get message");
-    System.out.println(new String(message.getPayload()));
+    //System.out.println(new String(message.getPayload()));
     String topic = message.getTopic();
 
 
@@ -116,9 +116,9 @@ public class AlertServiceImpl implements AlertService {
     if (topic.contains("picture")) {
       System.out.println("get picture");
       String imgInfo = new String(message.getPayload());
-      System.out.println("ImageInfo:" + imgInfo);
+      //System.out.println("ImageInfo:" + imgInfo);
       JSONObject jsonObject = JSONObject.parseObject(imgInfo);
-      System.out.println("JSONOBJECT:" + jsonObject.toJSONString());
+      //System.out.println("JSONOBJECT:" + jsonObject.toJSONString());
       if (imageList.size() == 6) {
         imageList.remove(0);
         imageList.add(jsonObject);
@@ -131,9 +131,9 @@ public class AlertServiceImpl implements AlertService {
     if (topic.contains("property")) {
       String info = new String(message.getPayload());
       JSONObject jsonObject = JSONObject.parseObject(info);
-      System.out.println("get Property" + jsonObject.toJSONString());
+      //System.out.println("get Property" + jsonObject.toJSONString());
       JSONObject ts = jsonObject.getJSONObject("items");
-      System.out.println("get JsonTS" + ts.toJSONString());
+      //System.out.println("get JsonTS" + ts.toJSONString());
       if (ts.containsKey("Temperature")) {
         JSONObject t = ts.getJSONObject("Temperature");
         temp = t.getFloat("value");
@@ -148,7 +148,7 @@ public class AlertServiceImpl implements AlertService {
       System.out.println("Find where is the pic2: have status");
       DeviceMessage deviceMessage = new DeviceMessage(new String (message.getPayload()));
       // can update device status
-    } else {
+    } else if (message.getTopic().contains("property")) {
       System.out.println("Find where is the pic3: Don't have status");
       PhysicalMessage physicalMessage = new PhysicalMessage(new String (message.getPayload()));
       System.out.println("Don't have status");
@@ -172,9 +172,11 @@ public class AlertServiceImpl implements AlertService {
               break;
             case "100":
               pledgeService.setPhysicalState(id, PhysicalState.SHOCKING);
+              alertCondition.signalAll();
               break;
             case "110":
             case "111":
+              alertCondition.signalAll();
               pledgeService.setPhysicalState(id, PhysicalState.MOVING);
               break;
           }
@@ -182,7 +184,6 @@ public class AlertServiceImpl implements AlertService {
       }
 
       //redisService.set(message.getTopic(), physicalMessage.getAlertType().getType());
-      alertCondition.signalAll();
     }
 
     lock.unlock();

@@ -1,5 +1,6 @@
 package wd.pledge.guarantee.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
@@ -9,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 @Entity
 @Table(name = "device")
+@JsonIgnoreProperties({"hibernateLazyInitializer","handler"})
 public class Device {
 
   @Id
